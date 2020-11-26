@@ -6,13 +6,13 @@ import javax.swing.SwingUtilities;
 
 public class JavaBrickBreaker extends JFrame {
 
-	GameEntity gameEntity;
-	Container screens;
-	CardLayout screenManager;
-	ScreenTitle screenTitle;
-	ScreenGameplay screenGameplay;
-	ScreenGameover screenGameover;
-	Screen currentScreen;
+	private GameEntity gameEntity;
+	private Container screens;
+	private CardLayout screenManager;
+	private ScreenTitle screenTitle;
+	private ScreenGameplay screenGameplay;
+	private ScreenGameover screenGameover;
+	private Screen currentScreen;
 
 	JavaBrickBreaker() {
 		setTitle("Brick Breaker");

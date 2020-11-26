@@ -21,22 +21,6 @@ class Brick extends Prop {
 	private boolean mRemovable = false;
 	private boolean mAnimationCalled = false;
 
-	int GetWidth() {
-		return mWidth;
-	}
-
-	int GetHeight() {
-		return mHeight;
-	}
-
-	int GetType() {
-		return mType;
-	}
-
-	boolean IsRemovable() {
-		return mRemovable;
-	}
-
 	Brick(Vec2f position, int width, int height, Color color) {
 		super(position, color);
 
@@ -112,5 +96,21 @@ class Brick extends Prop {
 
 		g.setColor(new Color(100, 100, 100, mAlpha));
 		g.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+	}
+	
+	int GetWidth() {
+		return mWidth;
+	}
+
+	int GetHeight() {
+		return mHeight;
+	}
+
+	int GetType() {
+		return mType;
+	}
+
+	boolean IsRemovable() {
+		return mRemovable;
 	}
 }

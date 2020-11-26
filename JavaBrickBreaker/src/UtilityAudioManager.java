@@ -14,7 +14,6 @@ class AudioPlayer {
 	private int mIndex;
 
 	AudioPlayer(String fileName, int channel) {
-
 		mChannel = channel;
 		mClips = new Clip[mChannel];
 		mIndex = 0;
@@ -40,7 +39,7 @@ class AudioPlayer {
 
 		mClips[mIndex].setFramePosition(0);
 		mClips[mIndex].start();
-		
+
 		mIndex++;
 	}
 

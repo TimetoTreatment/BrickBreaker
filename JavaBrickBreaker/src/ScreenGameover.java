@@ -9,20 +9,24 @@ import javax.swing.SwingConstants;
 
 public class ScreenGameover extends JPanel implements Screen {
 
-	private boolean exit = false;
 	private GameEntity mGameEntity;
 	private JLabel mHighScore;
 	private JLabel mScore;
-	private JLabel prompt;
-	private boolean animation = false;
-	private int mPrevHighScore = 0;
+	private JLabel mPrompt;
+	private int mPrevHighScore;
+	private boolean mExit;
+	private boolean mAnimation;
 
 	ScreenGameover(GameEntity gameEntity) {
 
 		mGameEntity = gameEntity;
+		mPrevHighScore = 0;
+		mExit = false;
+		mAnimation = false;
 
 		setLayout(null);
 		setBackground(Color.black);
+		setFocusable(true);
 
 		mScore = new JLabel();
 		mScore.setBounds(100, 100, 1000, 100);
@@ -38,37 +42,23 @@ public class ScreenGameover extends JPanel implements Screen {
 		mHighScore.setFont(new Font(Font.DIALOG, Font.PLAIN, 60));
 		add(mHighScore);
 
-		prompt = new JLabel("Press Spacebar to Play");
-		prompt.setBounds(0, 600, 1200, 100);
-		prompt.setHorizontalAlignment(SwingConstants.CENTER);
-		prompt.setForeground(Color.black);
-		prompt.setFont(new Font(Font.DIALOG, Font.PLAIN, 48));
-		add(prompt);
+		mPrompt = new JLabel("Press Spacebar to Play");
+		mPrompt.setBounds(0, 600, 1200, 100);
+		mPrompt.setHorizontalAlignment(SwingConstants.CENTER);
+		mPrompt.setForeground(Color.black);
+		mPrompt.setFont(new Font(Font.DIALOG, Font.PLAIN, 48));
+		add(mPrompt);
 
+		Animation();
+		
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-					exit = true;
+					mExit = true;
 				}
 			}
 		});
-
-		Animation();
-		setFocusable(true);
-		setVisible(true);
-	}
-
-	@Override
-	public boolean IsFinished() {
-
-		if (exit) {
-			exit = false;
-			mPrevHighScore = mGameEntity.GetHighScore();
-			return true;
-		}
-
-		return false;
 	}
 
 	@Override
@@ -86,26 +76,26 @@ public class ScreenGameover extends JPanel implements Screen {
 	}
 
 	private void Animation() {
-		if (animation)
+		if (mAnimation)
 			return;
 
-		animation = true;
+		mAnimation = true;
 		new Thread(() -> {
 			try {
 
 				Thread.sleep(4000);
 
 				for (;;) {
-					if (exit == true)
+					if (mExit == true)
 						return;
 
 					for (int i = 0; i < 256; i++) {
-						prompt.setForeground(new Color(i, i, i));
+						mPrompt.setForeground(new Color(i, i, i));
 						Thread.sleep(1);
 					}
 
 					for (int i = 255; i >= 0; i--) {
-						prompt.setForeground(new Color(i, i, i));
+						mPrompt.setForeground(new Color(i, i, i));
 						Thread.sleep(1);
 					}
 				}
@@ -120,7 +110,18 @@ public class ScreenGameover extends JPanel implements Screen {
 	@Override
 	public void Initialize() {
 		// TODO Auto-generated method stub
-		animation = false;
+		mAnimation = false;
 	}
 
+	@Override
+	public boolean IsFinished() {
+
+		if (mExit) {
+			mExit = false;
+			mPrevHighScore = mGameEntity.GetHighScore();
+			return true;
+		}
+
+		return false;
+	}
 }

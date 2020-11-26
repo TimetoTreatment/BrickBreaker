@@ -15,16 +15,19 @@ import javax.swing.border.MatteBorder;
 public class ScreenGameplay extends JPanel implements Screen {
 
 	private GameEntity mGameEntity;
-	private boolean mExit = false;
-	private boolean isInitialized = true;
+	private boolean mExit;
+	private boolean mIsInitialized;
 	private JLabel mTutorial;
 	private JPanel mHelp;
 
 	ScreenGameplay(GameEntity gameEntity) {
 		mGameEntity = gameEntity;
+		mExit = false;
+		mIsInitialized = true;
 
 		setBorder(new MatteBorder(5, 5, 0, 5, Color.black));
 		setBackground(Color.black);
+		setFocusable(true);
 		setLayout(null);
 
 		mTutorial = new JLabel();
@@ -120,20 +123,33 @@ public class ScreenGameplay extends JPanel implements Screen {
 				}
 			}
 		});
-
-		setFocusable(true);
-		setVisible(true);
 	}
 
 	@Override
-	public boolean IsFinished() {
+	public void Initialize() {
 
-		if (mExit) {
-			mExit = false;
-			return true;
+		mGameEntity.Initialize();
+		mGameEntity.NewStage();
+		Tutorial("Press 'SPACEBAR' to Launch BALL");
+
+		new Thread(() -> {
+
+			try {
+				for (int i = 0; i < 100; i++) {
+					setBorder(new MatteBorder(5, 5, 0, 5, new Color(i, i, i)));
+					repaint();
+					Thread.sleep(10);
+				}
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+		}).start();
+
+		if (mIsInitialized) {
+			mIsInitialized = false;
+			return;
 		}
-
-		return mExit;
+		mExit = false;
 	}
 
 	@Override
@@ -160,6 +176,16 @@ public class ScreenGameplay extends JPanel implements Screen {
 		mGameEntity.Draw((Graphics2D) g);
 	}
 
+	@Override
+	public boolean IsFinished() {
+		if (mExit) {
+			mExit = false;
+			return true;
+		}
+
+		return mExit;
+	}
+
 	void Tutorial(String text) {
 		new Thread(() -> {
 			try {
@@ -182,32 +208,5 @@ public class ScreenGameplay extends JPanel implements Screen {
 			}
 
 		}).start();
-	}
-
-	@Override
-	public void Initialize() {
-
-		mGameEntity.Initialize();
-		mGameEntity.NewStage();
-		Tutorial("Press 'SPACEBAR' to Launch BALL");
-
-		new Thread(() -> {
-
-			try {
-				for (int i = 0; i < 100; i++) {
-					setBorder(new MatteBorder(5, 5, 0, 5, new Color(i, i, i)));
-					repaint();
-					Thread.sleep(10);
-				}
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-		}).start();
-
-		if (isInitialized) {
-			isInitialized = false;
-			return;
-		}
-		mExit = false;
 	}
 }

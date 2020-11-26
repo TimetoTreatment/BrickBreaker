@@ -10,18 +10,10 @@ class Ball extends Prop {
 	private Vec2f mVelocity;
 	private double mRadious;
 
-	double GetRadious() {
-		return mRadious;
-	}
-
 	Ball(Vec2f position, Vec2f velocity) {
 		super(position, Color.white);
 		mRadious = 5;
 		mVelocity = velocity;
-	}
-
-	Vec2f GetVelocity() {
-		return mVelocity;
 	}
 
 	@Override
@@ -93,5 +85,13 @@ class Ball extends Prop {
 		}
 
 		return null;
+	}
+
+	Vec2f GetVelocity() {
+		return mVelocity;
+	}
+
+	double GetRadious() {
+		return mRadious;
 	}
 }

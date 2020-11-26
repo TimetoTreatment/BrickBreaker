@@ -1,4 +1,3 @@
-
 class Config {
 
 	static final int width = 1210;

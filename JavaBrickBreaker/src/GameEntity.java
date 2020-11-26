@@ -55,57 +55,6 @@ public class GameEntity {
 		mBonusBall = 5;
 	}
 
-	void AddBall(Vec2f position, Vec2f velocity) {
-		Ball ball = new Ball(position, velocity);
-		mProps.add(ball);
-		mBalls.add(ball);
-	}
-
-	void UseBall() {
-		if (mBonusBall > 0) {
-			mBonusBall--;
-			mAudioLaunch.Play();
-			mBallQueue++;
-		}
-	}
-
-	void AddBar(Vec2f position, int width, int height, Color color) {
-		mBar = new Bar(position, width, height, color);
-		mProps.add(mBar);
-	}
-
-	void MoveBar(int direction) {
-		mBar.Move(direction);
-	}
-
-	void AddBrick(Vec2f position, int width, int height, Color color) {
-		Brick newBrick = new Brick(position, width, height, color);
-		mProps.add(newBrick);
-		mBricks.add(newBrick);
-	}
-
-	void NewStage() {
-		mProps.clear();
-		mBalls.clear();
-		mBricks.clear();
-		mBar = null;
-
-		final int maxWidth = 1190;
-		final int maxHeight = 400;
-		final int maxCol = mStage + 2;
-		final int maxRow = mStage + 1;
-		int width = maxWidth / maxCol;
-		int height = maxHeight / maxRow;
-
-		for (int row = 0; row < maxRow; row++)
-			for (int col = 0; col < maxCol; col++)
-				AddBrick(new Vec2f(5 + col * width * 0.99, 5 + row * height * 0.99), (int) (width * 0.996), height,
-						Color.white);
-
-		AddBar(new Vec2f(390, 750), 400, 20, Color.white);
-		AddBall(new Vec2f(600, 740), new Vec2f(250, -500));
-	}
-
 	void Update(Container container, double dt) {
 		Ball multipleBallSource = null;
 		boolean multipleBallEnable = false;
@@ -244,6 +193,57 @@ public class GameEntity {
 
 		if (mBar != null)
 			mBar.Draw(g);
+	}
+
+	void NewStage() {
+		mProps.clear();
+		mBalls.clear();
+		mBricks.clear();
+		mBar = null;
+
+		final int maxWidth = 1190;
+		final int maxHeight = 400;
+		final int maxCol = mStage + 2;
+		final int maxRow = mStage + 1;
+		int width = maxWidth / maxCol;
+		int height = maxHeight / maxRow;
+
+		for (int row = 0; row < maxRow; row++)
+			for (int col = 0; col < maxCol; col++)
+				AddBrick(new Vec2f(5 + col * width * 0.99, 5 + row * height * 0.99), (int) (width * 0.996), height,
+						Color.white);
+
+		AddBar(new Vec2f(390, 750), 400, 20, Color.white);
+		AddBall(new Vec2f(600, 740), new Vec2f(250, -500));
+	}
+
+	void AddBall(Vec2f position, Vec2f velocity) {
+		Ball ball = new Ball(position, velocity);
+		mProps.add(ball);
+		mBalls.add(ball);
+	}
+
+	void UseBall() {
+		if (mBonusBall > 0) {
+			mBonusBall--;
+			mAudioLaunch.Play();
+			mBallQueue++;
+		}
+	}
+
+	void AddBar(Vec2f position, int width, int height, Color color) {
+		mBar = new Bar(position, width, height, color);
+		mProps.add(mBar);
+	}
+
+	void MoveBar(int direction) {
+		mBar.Move(direction);
+	}
+
+	void AddBrick(Vec2f position, int width, int height, Color color) {
+		Brick newBrick = new Brick(position, width, height, color);
+		mProps.add(newBrick);
+		mBricks.add(newBrick);
 	}
 
 	boolean IsGameOver() {

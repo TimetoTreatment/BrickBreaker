@@ -14,20 +14,20 @@ import javax.swing.border.EmptyBorder;
 
 public class ScreenTitle extends JPanel implements Screen {
 
-	private boolean exit;
-	private boolean isInitialized;
+	private boolean mExit;
+	private boolean mIsInitialized;
 	private int mLineXStart;
 	private int mLineXEnd;
 	private int mLineY;
 	private int mLineHighlightPos;
-	private JLabel title;
-	private JLabel subtitle;
-	private JLabel prompt;
+	private JLabel mTitle;
+	private JLabel mSubtitle;
+	private JLabel mPrompt;
 
 	ScreenTitle() {
 
-		exit = false;
-		isInitialized = false;
+		mExit = false;
+		mIsInitialized = false;
 		mLineXStart = 200;
 		mLineXEnd = 1000;
 		mLineY = 280;
@@ -36,32 +36,31 @@ public class ScreenTitle extends JPanel implements Screen {
 		setSize(Config.width, Config.height);
 		setLayout(new GridLayout(3, 1));
 		setFocusable(true);
-		setVisible(true);
 		setBackground(Color.black);
 
-		title = new JLabel("Brick Breaker");
-		title.setHorizontalAlignment(SwingConstants.CENTER);
-		title.setVerticalAlignment(SwingConstants.BOTTOM);
-		title.setSize(800, 100);
-		title.setLocation((Config.width - title.getWidth()) / 2, 180);
-		title.setForeground(Color.white);
-		title.setFont(new Font(Font.DIALOG, Font.BOLD, 108));
-		add(title);
+		mTitle = new JLabel("Brick Breaker");
+		mTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		mTitle.setVerticalAlignment(SwingConstants.BOTTOM);
+		mTitle.setSize(800, 100);
+		mTitle.setLocation((Config.width - mTitle.getWidth()) / 2, 180);
+		mTitle.setForeground(Color.white);
+		mTitle.setFont(new Font(Font.DIALOG, Font.BOLD, 108));
+		add(mTitle);
 
-		subtitle = new JLabel("with Java Swing");
-		subtitle.setHorizontalAlignment(SwingConstants.CENTER);
-		subtitle.setVerticalAlignment(SwingConstants.TOP);
-		subtitle.setForeground(Color.white);
-		subtitle.setFont(new Font(Font.DIALOG, Font.PLAIN, 30));
-		subtitle.setBorder(new EmptyBorder(20, 200, 220, 200));
-		add(subtitle);
+		mSubtitle = new JLabel("with Java Swing");
+		mSubtitle.setHorizontalAlignment(SwingConstants.CENTER);
+		mSubtitle.setVerticalAlignment(SwingConstants.TOP);
+		mSubtitle.setForeground(Color.white);
+		mSubtitle.setFont(new Font(Font.DIALOG, Font.PLAIN, 30));
+		mSubtitle.setBorder(new EmptyBorder(20, 200, 220, 200));
+		add(mSubtitle);
 
-		prompt = new JLabel("Press SPACEBAR to Play");
-		prompt.setHorizontalAlignment(SwingConstants.CENTER);
-		prompt.setForeground(Color.black);
-		prompt.setFont(new Font(Font.DIALOG, Font.PLAIN, 48));
-		prompt.setBorder(new EmptyBorder(100, 100, 150, 100));
-		add(prompt);
+		mPrompt = new JLabel("Press SPACEBAR to Play");
+		mPrompt.setHorizontalAlignment(SwingConstants.CENTER);
+		mPrompt.setForeground(Color.black);
+		mPrompt.setFont(new Font(Font.DIALOG, Font.PLAIN, 48));
+		mPrompt.setBorder(new EmptyBorder(100, 100, 150, 100));
+		add(mPrompt);
 
 		Animation();
 
@@ -69,18 +68,18 @@ public class ScreenTitle extends JPanel implements Screen {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_SPACE)
-					exit = true;
+					mExit = true;
 			}
 		});
 	}
 
 	@Override
 	public void Initialize() {
-		if (isInitialized)
+		if (mIsInitialized)
 			return;
 
-		isInitialized = true;
-		exit = false;
+		mIsInitialized = true;
+		mExit = false;
 	}
 
 	@Override
@@ -104,8 +103,8 @@ public class ScreenTitle extends JPanel implements Screen {
 
 	@Override
 	public boolean IsFinished() {
-		if (exit) {
-			exit = false;
+		if (mExit) {
+			mExit = false;
 			return true;
 		}
 
@@ -117,14 +116,14 @@ public class ScreenTitle extends JPanel implements Screen {
 			try {
 				Thread.sleep(4000);
 
-				for (; !exit;) {
+				for (; !mExit;) {
 					for (int i = 0; i < 256; i++) {
-						prompt.setForeground(new Color(i, i, i));
+						mPrompt.setForeground(new Color(i, i, i));
 						Thread.sleep(1);
 					}
 
 					for (int i = 255; i >= 0; i--) {
-						prompt.setForeground(new Color(i, i, i));
+						mPrompt.setForeground(new Color(i, i, i));
 						Thread.sleep(1);
 					}
 				}
@@ -135,7 +134,7 @@ public class ScreenTitle extends JPanel implements Screen {
 
 		new Thread(() -> {
 			try {
-				for (; !exit;) {
+				for (; !mExit;) {
 					for (int dt = 4; mLineHighlightPos <= mLineXEnd; mLineHighlightPos += 2) {
 
 						if (mLineHighlightPos >= (mLineXEnd - mLineXStart) * 4 / 5 + mLineXStart)

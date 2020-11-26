@@ -8,7 +8,7 @@ class Bar extends Prop {
 	private Vec2f mVelocity;
 	private int mWidth;
 	private int mHeight;
-	private int mDirection = stop;
+	private int mDirection;
 
 	Bar(Vec2f position, int width, int height, Color color) {
 		super(position, color);
@@ -16,22 +16,7 @@ class Bar extends Prop {
 		mVelocity = new Vec2f(0, 0);
 		mWidth = width;
 		mHeight = height;
-	}
-
-	Vec2f GetVelocity() {
-		return mVelocity;
-	}
-
-	int GetWidth() {
-		return mWidth;
-	}
-
-	void SetWidth(int width) {
-		mWidth = width;
-	}
-
-	int GetHeight() {
-		return mHeight;
+		mDirection = stop;
 	}
 
 	@Override
@@ -79,4 +64,19 @@ class Bar extends Prop {
 			mWidth = container.getWidth();
 	}
 
+	Vec2f GetVelocity() {
+		return mVelocity;
+	}
+
+	int GetWidth() {
+		return mWidth;
+	}
+
+	void SetWidth(int width) {
+		mWidth = width;
+	}
+
+	int GetHeight() {
+		return mHeight;
+	}
 }
