@@ -1,34 +1,48 @@
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
-import java.util.Vector;
 
 class Bar extends Prop {
 
-	Vec2f mVelocity;
-	private Vec2f mAcceleration;
-	int mWidth;
-	int mHeight;
-
-	final static int left = 0;
-	final static int right = 1;
-	final static int stop = 2;
+	private Vec2f mVelocity;
+	private int mWidth;
+	private int mHeight;
+	private int mDirection = stop;
 
 	Bar(Vec2f position, int width, int height, Color color) {
 		super(position, color);
 
 		mVelocity = new Vec2f(0, 0);
-		mAcceleration = new Vec2f(0, 0);
 		mWidth = width;
 		mHeight = height;
 	}
 
+	Vec2f GetVelocity() {
+		return mVelocity;
+	}
+
+	int GetWidth() {
+		return mWidth;
+	}
+
+	void SetWidth(int width) {
+		mWidth = width;
+	}
+
+	int GetHeight() {
+		return mHeight;
+	}
+
 	@Override
 	void Update(double dt) {
-		mVelocity.x = mVelocity.x + mAcceleration.x * dt;
-		mVelocity.y = mVelocity.y + mAcceleration.y * dt;
+
+		if (mDirection == west)
+			mVelocity.x = -1000;
+		else if (mDirection == east)
+			mVelocity.x = 1000;
+		else
+			mVelocity.x = 0;
 
 		mPosition.x = mPosition.x + mVelocity.x * dt;
 		mPosition.y = mPosition.y + mVelocity.y * dt;
@@ -46,12 +60,7 @@ class Bar extends Prop {
 	}
 
 	void Move(int direction) {
-		if (direction == left)
-			mVelocity.x = -1000;
-		else if (direction == right)
-			mVelocity.x = 1000;
-		else
-			mVelocity.x = 0;
+		mDirection = direction;
 	}
 
 	void Collision(Container container) {
@@ -65,6 +74,9 @@ class Bar extends Prop {
 			mPosition.x = container.getWidth() - mWidth;
 			mVelocity.x = 0;
 		}
+
+		if (mWidth > container.getWidth())
+			mWidth = container.getWidth();
 	}
 
 }

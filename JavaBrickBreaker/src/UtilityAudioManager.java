@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
@@ -10,10 +9,9 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 class AudioPlayer {
 
-	boolean mLoop = false;
 	private Clip[] mClips;
-	int mChannel;
-	int mIndex;
+	private int mChannel;
+	private int mIndex;
 
 	AudioPlayer(String fileName, int channel) {
 
@@ -37,19 +35,20 @@ class AudioPlayer {
 	}
 
 	void Play() {
-
-		mIndex++;
-
 		if (mIndex == mChannel)
 			mIndex = 0;
 
 		mClips[mIndex].setFramePosition(0);
 		mClips[mIndex].start();
+		
+		mIndex++;
 	}
 
 	void SetLoop(boolean b) {
 		if (b == true)
 			mClips[0].loop(-1);
+		else
+			mClips[0].loop(0);
 	}
 
 	void Stop() {

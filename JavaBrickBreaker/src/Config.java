@@ -6,7 +6,6 @@ class Config {
 	static final double frameTime = 0.01;
 }
 
-
 class Vec2f {
 	double x;
 	double y;

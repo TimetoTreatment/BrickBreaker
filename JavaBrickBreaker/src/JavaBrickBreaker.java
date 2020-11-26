@@ -1,7 +1,8 @@
 import java.awt.CardLayout;
 import java.awt.Container;
-import java.awt.event.*;
-import javax.swing.*;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 public class JavaBrickBreaker extends JFrame {
 
@@ -33,8 +34,6 @@ public class JavaBrickBreaker extends JFrame {
 		screens.add("gameplay", screenGameplay);
 		screens.add("gameover", screenGameover);
 
-		currentScreen = screenTitle;
-
 		MainLoop();
 
 		setLocationRelativeTo(null);
@@ -43,13 +42,13 @@ public class JavaBrickBreaker extends JFrame {
 
 	void MainLoop() {
 		new Thread(() -> {
-
-			for (;;) {
+			for (currentScreen = screenTitle;;) {
 				try {
 					currentScreen.Initialize();
-					
+					Thread.sleep((long) (Config.frameTime * 1000));
+
 					for (;;) {
-						
+
 						if (currentScreen.IsFinished()) {
 							screenManager.next(screens);
 
@@ -59,10 +58,10 @@ public class JavaBrickBreaker extends JFrame {
 								currentScreen = screenGameover;
 							else if (currentScreen instanceof ScreenGameover)
 								currentScreen = screenTitle;
-							
+
 							break;
 						}
-						
+
 						currentScreen.Update();
 						Thread.sleep((long) (Config.frameTime * 1000));
 					}
@@ -76,6 +75,8 @@ public class JavaBrickBreaker extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new JavaBrickBreaker();
+		SwingUtilities.invokeLater(() -> {
+			new JavaBrickBreaker();
+		});
 	}
 }

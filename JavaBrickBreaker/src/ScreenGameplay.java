@@ -10,18 +10,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 public class ScreenGameplay extends JPanel implements Screen {
 
-	GameEntity mGameEntity;
-	boolean mExit = false;
-	MatteBorder mBorder;
-	boolean isInitialized = true;
-	JLabel tutorial;
-	JPanel mHelp;
-	int mHighlightY;
+	private GameEntity mGameEntity;
+	private boolean mExit = false;
+	private boolean isInitialized = true;
+	private JLabel mTutorial;
+	private JPanel mHelp;
 
 	ScreenGameplay(GameEntity gameEntity) {
 		mGameEntity = gameEntity;
@@ -30,17 +27,17 @@ public class ScreenGameplay extends JPanel implements Screen {
 		setBackground(Color.black);
 		setLayout(null);
 
-		tutorial = new JLabel();
-		tutorial.setFont(new Font(Font.DIALOG, Font.BOLD, 24));
-		tutorial.setHorizontalAlignment(SwingConstants.CENTER);
-		tutorial.setForeground(Color.white);
-		tutorial.setBounds(680, 790, 500, 50);
-		add(tutorial);
+		mTutorial = new JLabel();
+		mTutorial.setFont(new Font(Font.DIALOG, Font.BOLD, 24));
+		mTutorial.setHorizontalAlignment(SwingConstants.CENTER);
+		mTutorial.setForeground(Color.white);
+		mTutorial.setBounds(680, 790, 500, 50);
+		add(mTutorial);
 
 		mHelp = new JPanel();
 		mHelp.setLayout(new GridLayout(5, 1));
 		mHelp.setOpaque(false);
-		mHelp.setBounds(20, 500, 500, 200);
+		mHelp.setBounds(20, 550, 500, 200);
 		mHelp.setVisible(false);
 
 		JLabel yellow = new JLabel("Ball Fission X 3");
@@ -67,11 +64,17 @@ public class ScreenGameplay extends JPanel implements Screen {
 		blue.setBorder(new EmptyBorder(0, 20, 0, 0));
 		mHelp.add(blue);
 
-		JLabel orange = new JLabel("Bonus++ (SPACEBAR)");
+		JLabel orange = new JLabel("Bonus Ball + 1");
 		orange.setForeground(new Color(200, 100, 0));
 		orange.setFont(new Font(Font.DIALOG, Font.BOLD, 24));
 		orange.setBorder(new EmptyBorder(0, 20, 0, 0));
 		mHelp.add(orange);
+
+		JLabel gray = new JLabel("???");
+		gray.setForeground(new Color(100, 100, 100));
+		gray.setFont(new Font(Font.DIALOG, Font.BOLD, 24));
+		gray.setBorder(new EmptyBorder(0, 20, 0, 0));
+		mHelp.add(gray);
 
 		add(mHelp);
 
@@ -100,11 +103,11 @@ public class ScreenGameplay extends JPanel implements Screen {
 
 				switch (e.getKeyCode()) {
 				case KeyEvent.VK_LEFT:
-					mGameEntity.MoveBar(Bar.left);
+					mGameEntity.MoveBar(Bar.west);
 					break;
 
 				case KeyEvent.VK_RIGHT:
-					mGameEntity.MoveBar(Bar.right);
+					mGameEntity.MoveBar(Bar.east);
 					break;
 
 				case KeyEvent.VK_SPACE:
@@ -135,7 +138,6 @@ public class ScreenGameplay extends JPanel implements Screen {
 
 	@Override
 	public void Update() {
-		// TODO Auto-generated method stub
 
 		mGameEntity.Update(this, Config.frameTime);
 		requestFocus();
@@ -143,13 +145,13 @@ public class ScreenGameplay extends JPanel implements Screen {
 
 		if (mGameEntity.IsClear()) {
 			mGameEntity.NewStage();
-			Tutorial("Press 'H' to see Block Detail");
+			Tutorial("Press 'H' key to see Block Detail");
 		}
 
 		if (mGameEntity.IsGameOver()) {
-			mBorder = new MatteBorder(5, 5, 0, 5, Color.black);
 			mExit = true;
 		}
+
 	}
 
 	@Override
@@ -161,22 +163,21 @@ public class ScreenGameplay extends JPanel implements Screen {
 	void Tutorial(String text) {
 		new Thread(() -> {
 			try {
-				tutorial.setText(text);
-				tutorial.setForeground(Color.white);
+				mTutorial.setText(text);
+				mTutorial.setForeground(Color.white);
 
 				for (int i = 0; i <= 255; i++) {
 					Thread.sleep(1);
-					tutorial.setForeground(new Color(i, i, i));
+					mTutorial.setForeground(new Color(i, i, i));
 				}
-				
+
 				Thread.sleep(3000);
 
 				for (int i = 255; i >= 0; i--) {
 					Thread.sleep(1);
-					tutorial.setForeground(new Color(i, i, i));
+					mTutorial.setForeground(new Color(i, i, i));
 				}
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
@@ -190,19 +191,16 @@ public class ScreenGameplay extends JPanel implements Screen {
 		mGameEntity.NewStage();
 		Tutorial("Press 'SPACEBAR' to Launch BALL");
 
-		setBorder(new MatteBorder(5, 5, 0, 5, Color.black));
-
 		new Thread(() -> {
 
-			for (int i = 0; i < 100; i++) {
-				try {
+			try {
+				for (int i = 0; i < 100; i++) {
+					setBorder(new MatteBorder(5, 5, 0, 5, new Color(i, i, i)));
+					repaint();
 					Thread.sleep(10);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				}
-				setBorder(new MatteBorder(5, 5, 0, 5, new Color(i, i, i)));
-				repaint();
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
 			}
 		}).start();
 

@@ -6,29 +6,23 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.border.MatteBorder;
 
 public class ScreenTitle extends JPanel implements Screen {
 
-	boolean exit;
-	boolean isInitialized;
-	JLabel title;
-	int mLineXStart;
-	int mLineXEnd;
-	int mLineY;
-	int mLineHighlightPos;
-	JLabel subtitle;
-	JLabel prompt;
+	private boolean exit;
+	private boolean isInitialized;
+	private int mLineXStart;
+	private int mLineXEnd;
+	private int mLineY;
+	private int mLineHighlightPos;
+	private JLabel title;
+	private JLabel subtitle;
+	private JLabel prompt;
 
 	ScreenTitle() {
 
@@ -62,7 +56,7 @@ public class ScreenTitle extends JPanel implements Screen {
 		subtitle.setBorder(new EmptyBorder(20, 200, 220, 200));
 		add(subtitle);
 
-		prompt = new JLabel("Press Spacebar to Play");
+		prompt = new JLabel("Press SPACEBAR to Play");
 		prompt.setHorizontalAlignment(SwingConstants.CENTER);
 		prompt.setForeground(Color.black);
 		prompt.setFont(new Font(Font.DIALOG, Font.PLAIN, 48));
@@ -102,11 +96,20 @@ public class ScreenTitle extends JPanel implements Screen {
 		Graphics2D g = (Graphics2D) _g;
 
 		g.setPaint(new GradientPaint(mLineXStart, mLineY, Color.black, mLineHighlightPos, mLineY, Color.white));
-		g.drawLine(mLineXStart, mLineY, mLineHighlightPos, mLineY);
+		g.drawLine(mLineXStart, mLineY, mLineHighlightPos + 1, mLineY);
 
 		g.setPaint(new GradientPaint(mLineHighlightPos, mLineY, Color.white, mLineXEnd, mLineY, Color.black));
-		g.drawLine(mLineHighlightPos, mLineY, mLineXEnd, mLineY);
+		g.drawLine(mLineHighlightPos - 1, mLineY, mLineXEnd, mLineY);
+	}
 
+	@Override
+	public boolean IsFinished() {
+		if (exit) {
+			exit = false;
+			return true;
+		}
+
+		return false;
 	}
 
 	private void Animation() {
@@ -114,10 +117,7 @@ public class ScreenTitle extends JPanel implements Screen {
 			try {
 				Thread.sleep(4000);
 
-				for (;;) {
-					if (exit == true)
-						return;
-
+				for (; !exit;) {
 					for (int i = 0; i < 256; i++) {
 						prompt.setForeground(new Color(i, i, i));
 						Thread.sleep(1);
@@ -129,28 +129,21 @@ public class ScreenTitle extends JPanel implements Screen {
 					}
 				}
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		}).start();
 
 		new Thread(() -> {
 			try {
-				for (;;) {
-					if (exit == true)
-						return;
-
-					int dt;
-
-					for (dt = 4; mLineHighlightPos <= mLineXEnd; mLineHighlightPos += 2) {
+				for (; !exit;) {
+					for (int dt = 4; mLineHighlightPos <= mLineXEnd; mLineHighlightPos += 2) {
 
 						if (mLineHighlightPos >= (mLineXEnd - mLineXStart) * 4 / 5 + mLineXStart)
 							dt = 1;
 
 						Thread.sleep(dt);
 					}
-					for (dt = 4; mLineHighlightPos >= mLineXStart; mLineHighlightPos -= 2) {
+					for (int dt = 4; mLineHighlightPos >= mLineXStart; mLineHighlightPos -= 2) {
 
 						if (mLineHighlightPos <= (mLineXEnd - mLineXStart) * 1 / 5 + mLineXStart)
 							dt = 1;
@@ -164,15 +157,4 @@ public class ScreenTitle extends JPanel implements Screen {
 			}
 		}).start();
 	}
-
-	@Override
-	public boolean IsFinished() {
-		if (exit) {
-			exit = false;
-			return true;
-		}
-
-		return false;
-	}
-
 }

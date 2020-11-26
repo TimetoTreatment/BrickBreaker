@@ -6,17 +6,16 @@ import java.awt.event.KeyEvent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 
 public class ScreenGameover extends JPanel implements Screen {
 
-	boolean exit = false;
-	GameEntity mGameEntity;
-	JLabel mHighScore;
-	JLabel mScore;
-	JLabel prompt;
-	boolean animation = false;
-	int highScore = 0;
+	private boolean exit = false;
+	private GameEntity mGameEntity;
+	private JLabel mHighScore;
+	private JLabel mScore;
+	private JLabel prompt;
+	private boolean animation = false;
+	private int mPrevHighScore = 0;
 
 	ScreenGameover(GameEntity gameEntity) {
 
@@ -65,7 +64,7 @@ public class ScreenGameover extends JPanel implements Screen {
 
 		if (exit) {
 			exit = false;
-			highScore = mGameEntity.highScore;
+			mPrevHighScore = mGameEntity.GetHighScore();
 			return true;
 		}
 
@@ -75,13 +74,13 @@ public class ScreenGameover extends JPanel implements Screen {
 	@Override
 	public void Update() {
 
-		if (highScore < mGameEntity.currentScore)
+		if (mPrevHighScore < mGameEntity.GetCurrentScore())
 			mScore.setForeground(Color.green);
 		else
 			mScore.setForeground(Color.white);
 
-		mHighScore.setText("HighScore : " + Integer.toString(mGameEntity.highScore));
-		mScore.setText("Score : " + Integer.toString(mGameEntity.currentScore));
+		mHighScore.setText("HighScore : " + Integer.toString(mGameEntity.GetHighScore()));
+		mScore.setText("Score : " + Integer.toString(mGameEntity.GetCurrentScore()));
 
 		requestFocus();
 	}

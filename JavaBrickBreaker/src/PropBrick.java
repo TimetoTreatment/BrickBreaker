@@ -1,4 +1,3 @@
-import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -7,36 +6,64 @@ import java.awt.Graphics2D;
 
 class Brick extends Prop {
 
-	int mWidth;
-	int mHeight;
-	int mType = 0;
 	final static int normal = 0;
 	final static int multipleBall = 1;
 	final static int fastBall = 2;
 	final static int longBar = 3;
 	final static int shortBar = 4;
 	final static int addLife = 5;
-	private int mAlpha = 255;
-	boolean mRemovable = false;
-	boolean mAnimationCalled = false;
+	final static int ultimate = 6;
+
+	private int mWidth;
+	private int mHeight;
+	private int mType = 0;
+	private int mAlpha = 254;
+	private boolean mRemovable = false;
+	private boolean mAnimationCalled = false;
+
+	int GetWidth() {
+		return mWidth;
+	}
+
+	int GetHeight() {
+		return mHeight;
+	}
+
+	int GetType() {
+		return mType;
+	}
+
+	boolean IsRemovable() {
+		return mRemovable;
+	}
 
 	Brick(Vec2f position, int width, int height, Color color) {
 		super(position, color);
 
-		mType = (int) (Math.random() * 15);
+		int random = (int) (Math.random() * 100);
 
-		if (mType > 6)
-			mType = normal;
-		else if (mType == multipleBall)
+		if (random < 6) {
+			mType = multipleBall;
 			mColor = new Color(200, 200, 0);
-		else if (mType == fastBall)
+		} else if (random < 12) {
+			mType = fastBall;
 			mColor = new Color(200, 0, 0);
-		else if (mType == longBar)
+		} else if (random < 18) {
+			mType = longBar;
 			mColor = new Color(0, 200, 0);
-		else if (mType == shortBar)
+		} else if (random < 24) {
+			mType = shortBar;
 			mColor = new Color(0, 0, 200);
-		else if (mType == addLife)
+		} else if (random < 30) {
+			mType = addLife;
 			mColor = new Color(200, 100, 0);
+		} else if (random < 31) {
+			mType = ultimate;
+			mColor = new Color(100, 100, 100);
+		} else {
+			mType = normal;
+			mColor = Color.white;
+		}
 
 		mWidth = width;
 		mHeight = height;
@@ -44,13 +71,13 @@ class Brick extends Prop {
 
 	@Override
 	void Update(double dt) {
-		if (mEnable == false) {
+		if (IsEnable() == false) {
 			if (mAnimationCalled == false) {
 				mAnimationCalled = true;
 
 				new Thread(() -> {
 					try {
-						for (; mAlpha > 5; mAlpha -= 2) {
+						for (; mAlpha > 0; mAlpha -= 2) {
 							Thread.sleep(1);
 						}
 						Thread.sleep(1000);

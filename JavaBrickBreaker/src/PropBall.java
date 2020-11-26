@@ -2,13 +2,17 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
+import java.util.Vector;
 
 class Ball extends Prop {
 
-	Vec2f mDefaultVelocity = new Vec2f(250, -500);
-	Vec2f mVelocity;
-	double mRadious;
+	final static Vec2f defaultVelocity = new Vec2f(250, -500);
+	private Vec2f mVelocity;
+	private double mRadious;
+
+	double GetRadious() {
+		return mRadious;
+	}
 
 	Ball(Vec2f position, Vec2f velocity) {
 		super(position, Color.white);
@@ -20,11 +24,10 @@ class Ball extends Prop {
 		return mVelocity;
 	}
 
+	@Override
 	void Update(double dt) {
-		
 		mVelocity.x = mVelocity.x + mVelocity.x * 0.01 * dt;
 		mVelocity.y = mVelocity.y + mVelocity.y * 0.01 * dt;
-		
 		mPosition.x = mPosition.x + mVelocity.x * dt;
 		mPosition.y = mPosition.y + mVelocity.y * dt;
 	}
@@ -35,10 +38,9 @@ class Ball extends Prop {
 				(int) mPosition.x + (int) mRadious * 2, (int) mPosition.y + (int) mRadious * 2,
 				new Color(100, 100, 100)));
 		g.fillOval((int) (mPosition.x), (int) (mPosition.y), (int) mRadious * 2, (int) mRadious * 2);
-
 	}
 
-	Prop Collision(Container container, ArrayList<Prop> props) {
+	Prop Collision(Container container, Vector<Prop> props) {
 		if (container.getHeight() <= 100)
 			return null;
 
@@ -64,18 +66,29 @@ class Ball extends Prop {
 			if (prop instanceof Bar) {
 
 				Bar bar = (Bar) prop;
-				if (mPosition.x > bar.mPosition.x && mPosition.x < bar.mPosition.x + bar.mWidth
-						&& mPosition.y > bar.mPosition.y - mRadious * 2
-						&& mPosition.y < bar.mPosition.y + bar.mHeight) {
+				if (mPosition.x > bar.GetPosition().x && mPosition.x < bar.GetPosition().x + bar.GetWidth()
+						&& mPosition.y > bar.GetPosition().y - mRadious * 2
+						&& mPosition.y < bar.GetPosition().y + bar.GetHeight()) {
 					return bar;
 				}
 			} else if (prop instanceof Brick) {
 
 				Brick brick = (Brick) prop;
 
-				if (mPosition.x > brick.mPosition.x && mPosition.x < brick.mPosition.x + brick.mWidth
-						&& mPosition.y > brick.mPosition.y && mPosition.y < brick.mPosition.y + brick.mHeight)
-					return brick;
+				if (brick.IsEnable()) {
+					if (mPosition.x >= brick.GetPosition().x - mRadious * 2
+							&& mPosition.x <= brick.GetPosition().x + brick.GetWidth()
+							&& mPosition.y >= brick.GetPosition().y - mRadious * 2
+							&& mPosition.y <= brick.GetPosition().y + brick.GetHeight()) {
+						if (mPosition.x <= brick.GetPosition().x
+								|| mPosition.x >= brick.GetPosition().x + brick.GetWidth() - mRadious)
+							mVelocity.x = -mVelocity.x;
+						else
+							mVelocity.y = -mVelocity.y;
+
+						return brick;
+					}
+				}
 			}
 		}
 
