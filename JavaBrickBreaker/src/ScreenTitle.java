@@ -64,8 +64,9 @@ public class ScreenTitle extends JPanel implements Screen {
 
 		prompt = new JLabel("Press Spacebar to Play");
 		prompt.setHorizontalAlignment(SwingConstants.CENTER);
-		prompt.setFont(new Font(Font.DIALOG, Font.PLAIN, 24));
-		prompt.setBorder(new CompoundBorder(new EmptyBorder(170, 390, 65, 390), new LineBorder(Color.white, 2)));
+		prompt.setForeground(Color.black);
+		prompt.setFont(new Font(Font.DIALOG, Font.PLAIN, 48));
+		prompt.setBorder(new EmptyBorder(100, 100, 150, 100));
 		add(prompt);
 
 		Animation();
@@ -75,17 +76,6 @@ public class ScreenTitle extends JPanel implements Screen {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_SPACE)
 					exit = true;
-			}
-		});
-
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				System.out.println("x " + e.getX());
-				System.out.println("y " + e.getY());
-
-				mLineY = e.getY();
 			}
 		});
 	}
@@ -111,34 +101,32 @@ public class ScreenTitle extends JPanel implements Screen {
 
 		Graphics2D g = (Graphics2D) _g;
 
-		g.setColor(Color.white);
-		g.drawLine(mLineXStart, mLineY, mLineXEnd, mLineY);
+		g.setPaint(new GradientPaint(mLineXStart, mLineY, Color.black, mLineHighlightPos, mLineY, Color.white));
+		g.drawLine(mLineXStart, mLineY, mLineHighlightPos, mLineY);
 
-		g.setPaint(new GradientPaint(mLineHighlightPos, mLineY, Color.white,
-				mLineHighlightPos+10, mLineY, Color.black));
-		g.fillOval(mLineHighlightPos, mLineY-5, 10, 10);
+		g.setPaint(new GradientPaint(mLineHighlightPos, mLineY, Color.white, mLineXEnd, mLineY, Color.black));
+		g.drawLine(mLineHighlightPos, mLineY, mLineXEnd, mLineY);
+
 	}
 
 	private void Animation() {
 		new Thread(() -> {
 			try {
+				Thread.sleep(4000);
+
 				for (;;) {
 					if (exit == true)
 						return;
 
-					prompt.setForeground(Color.black);
-					Thread.sleep(250);
+					for (int i = 0; i < 256; i++) {
+						prompt.setForeground(new Color(i, i, i));
+						Thread.sleep(1);
+					}
 
-					double random = Math.random();
-					if (random <= 0.33)
-						prompt.setForeground(Color.red);
-					else if (random <= 0.66)
-						prompt.setForeground(Color.green);
-					else
-						prompt.setForeground(Color.cyan);
-
-					Thread.sleep(250);
-
+					for (int i = 255; i >= 0; i--) {
+						prompt.setForeground(new Color(i, i, i));
+						Thread.sleep(1);
+					}
 				}
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block

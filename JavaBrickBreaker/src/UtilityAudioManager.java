@@ -49,7 +49,7 @@ class AudioPlayer {
 
 	void SetLoop(boolean b) {
 		if (b == true)
-			mClips[0].loop(100);
+			mClips[0].loop(-1);
 	}
 
 	void Stop() {

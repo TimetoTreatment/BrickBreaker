@@ -23,12 +23,20 @@ class Brick extends Prop {
 	Brick(Vec2f position, int width, int height, Color color) {
 		super(position, color);
 
-		mType = (int) (Math.random() * 20);
-		if (mType > 6)
-			mType = 0;
+		mType = (int) (Math.random() * 15);
 
-		if (mType == 1)
+		if (mType > 6)
+			mType = normal;
+		else if (mType == multipleBall)
 			mColor = new Color(200, 200, 0);
+		else if (mType == fastBall)
+			mColor = new Color(200, 0, 0);
+		else if (mType == longBar)
+			mColor = new Color(0, 200, 0);
+		else if (mType == shortBar)
+			mColor = new Color(0, 0, 200);
+		else if (mType == addLife)
+			mColor = new Color(200, 100, 0);
 
 		mWidth = width;
 		mHeight = height;
@@ -62,7 +70,7 @@ class Brick extends Prop {
 	@Override
 	void Draw(Graphics2D g) {
 
-		int padding = 10;
+		int padding = mHeight / 10;
 		mColor = new Color(mColor.getRed(), mColor.getGreen(), mColor.getBlue(), mAlpha);
 
 		g.setColor(mColor);
@@ -77,28 +85,5 @@ class Brick extends Prop {
 
 		g.setColor(new Color(100, 100, 100, mAlpha));
 		g.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
-
-		switch (mType) {
-
-		case Brick.multipleBall:
-			g.drawString("Multiple Ball", (int) mPosition.x + 40, (int) mPosition.y + 55);
-			break;
-
-		case Brick.fastBall:
-			g.drawString("Speed Up", (int) mPosition.x + 50, (int) mPosition.y + 55);
-			break;
-
-		case Brick.shortBar:
-			g.drawString("Short Bar", (int) mPosition.x + 45, (int) mPosition.y + 55);
-			break;
-
-		case Brick.longBar:
-			g.drawString("Long Bar", (int) mPosition.x + 50, (int) mPosition.y + 55);
-			break;
-
-		case Brick.addLife:
-			g.drawString("Bonus ++", (int) mPosition.x + 50, (int) mPosition.y + 55);
-			break;
-		}
 	}
 }

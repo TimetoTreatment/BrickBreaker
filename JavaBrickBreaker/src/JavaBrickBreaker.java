@@ -46,7 +46,6 @@ public class JavaBrickBreaker extends JFrame {
 
 			for (;;) {
 				try {
-					
 					currentScreen.Initialize();
 					
 					for (;;) {
@@ -59,10 +58,7 @@ public class JavaBrickBreaker extends JFrame {
 							else if (currentScreen instanceof ScreenGameplay)
 								currentScreen = screenGameover;
 							else if (currentScreen instanceof ScreenGameover)
-							{
-								gameEntity.Initialize();
 								currentScreen = screenTitle;
-							}
 							
 							break;
 						}

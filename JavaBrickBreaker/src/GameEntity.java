@@ -8,8 +8,8 @@ import java.util.Vector;
 public class GameEntity {
 
 	private int mBonusBall;
-	private int highScore;
-	private int currentScore;
+	int highScore;
+	int currentScore;
 	private int mStage;
 	private int mBallQueue;
 	private ArrayList<Prop> mProps;
@@ -38,6 +38,7 @@ public class GameEntity {
 		mBalls = new ArrayList<>();
 		mBricks = new ArrayList<>();
 		mBar = null;
+		highScore = 0;
 
 		for (int i = 0; i < 7; i++)
 			mAudioLaugh[i] = new AudioPlayer("laugh" + i + ".wav", 1);
@@ -50,7 +51,6 @@ public class GameEntity {
 
 	void Initialize() {
 
-		highScore = 0;
 		currentScore = 0;
 		mStage = 1;
 		mBallQueue = 0;
@@ -99,8 +99,8 @@ public class GameEntity {
 
 		final int maxWidth = 1190;
 		final int maxHeight = 400;
-		final int maxCol = mStage + 1;
-		final int maxRow = mStage;
+		final int maxCol = mStage + 2;
+		final int maxRow = mStage+1;
 		int width = maxWidth / maxCol;
 		int height = maxHeight / maxRow;
 
@@ -114,7 +114,6 @@ public class GameEntity {
 	}
 
 	void Update(Container container, double dt) {
-
 		Ball multipleBallSource = null;
 		boolean multipleBallEnable = false;
 
@@ -245,6 +244,7 @@ public class GameEntity {
 
 		mAudioClear.Play();
 		mStage++;
+		mBonusBall += 3;
 		return true;
 	}
 
