@@ -1,36 +1,30 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 
 public class ScreenGameplay extends JPanel implements Screen {
 
-	
 	GameEntity mGameEntity;
 	boolean mExit = false;
 	MatteBorder mBorder;
 	boolean isInitialized = true;
+	
 
 	ScreenGameplay(GameEntity gameEntity) {
 		mGameEntity = gameEntity;
-		mGameEntity.AddBar(new Vec2f(390, 750), 400, 20, Color.white);
-		mGameEntity.AddBall(new Vec2f(600, 740), new Vec2f(250, -500));
-
-		int row = 5;
-		int col = 5;
-
-		for (row = 5; row <= 500; row += 100) {
-			for (col = 5; col <= 1000; col += 197)
-				mGameEntity.AddBrick(new Vec2f(col, row), 200, 100, Color.white);
-		}
 
 		setBorder(new MatteBorder(5, 5, 0, 5, Color.black));
 		setBackground(Color.black);
+
+		setLayout(null);
 
 		addKeyListener(new KeyAdapter() {
 
@@ -90,19 +84,15 @@ public class ScreenGameplay extends JPanel implements Screen {
 		requestFocus();
 		repaint();
 
-		if(mGameEntity.IsClear())
-		{
-			
-			
+		if (mGameEntity.IsClear()) {
+			mGameEntity.NewStage();
 		}
-		
-		
+
 		if (mGameEntity.IsGameOver()) {
 			mBorder = new MatteBorder(5, 5, 0, 5, Color.black);
 			mExit = true;
 		}
-		
-		
+
 	}
 
 	@Override
@@ -113,7 +103,32 @@ public class ScreenGameplay extends JPanel implements Screen {
 
 	@Override
 	public void Initialize() {
-		// TODO Auto-generated method stub
+		
+		JLabel tutorial = new JLabel("Press SPACEBAR to launch spare balls");
+		tutorial.setFont(new Font(Font.DIALOG, Font.BOLD, 24));
+		tutorial.setHorizontalAlignment(SwingConstants.CENTER);
+		tutorial.setForeground(Color.white);
+		tutorial.setBounds(680, 790, 500   , 50);
+		add(tutorial);
+
+		new Thread(() -> {
+			try {
+
+				Thread.sleep(3000);
+
+				for (int i = 255; i >= 0; i--) {
+					Thread.sleep(1);
+					tutorial.setForeground(new Color(i, i, i));
+				}
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+		}).start();
+
+		mGameEntity.Initialize();
+		mGameEntity.NewStage();
 
 		setBorder(new MatteBorder(5, 5, 0, 5, Color.black));
 
@@ -129,7 +144,6 @@ public class ScreenGameplay extends JPanel implements Screen {
 				setBorder(new MatteBorder(5, 5, 0, 5, new Color(i, i, i)));
 				repaint();
 			}
-
 		}).start();
 
 		if (isInitialized) {
@@ -137,10 +151,5 @@ public class ScreenGameplay extends JPanel implements Screen {
 			return;
 		}
 		mExit = false;
-
-		mGameEntity.AddBar(new Vec2f(390, 750), 400, 20, Color.white);
-		mGameEntity.AddBall(new Vec2f(600, 740), new Vec2f(250, -500));
-
 	}
-
 }

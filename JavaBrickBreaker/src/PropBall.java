@@ -8,14 +8,12 @@ class Ball extends Prop {
 
 	Vec2f mDefaultVelocity = new Vec2f(250, -500);
 	Vec2f mVelocity;
-	private Vec2f mAcceleration;
 	double mRadious;
 
 	Ball(Vec2f position, Vec2f velocity) {
 		super(position, Color.white);
 		mRadious = 5;
 		mVelocity = velocity;
-		mAcceleration = new Vec2f(10, 10);
 	}
 
 	Vec2f GetVelocity() {
@@ -23,20 +21,10 @@ class Ball extends Prop {
 	}
 
 	void Update(double dt) {
-
-		if (mVelocity.x > 0)
-			mAcceleration.x = Math.abs(mAcceleration.x);
-		else
-			mAcceleration.x = -Math.abs(mAcceleration.x);
-
-		if (mVelocity.y > 0)
-			mAcceleration.y = Math.abs(mAcceleration.y);
-		else
-			mAcceleration.y = -Math.abs(mAcceleration.y);
-
-		mVelocity.x = mVelocity.x + mAcceleration.x * dt;
-		mVelocity.y = mVelocity.y + mAcceleration.y * dt;
-
+		
+		mVelocity.x = mVelocity.x + mVelocity.x * 0.01 * dt;
+		mVelocity.y = mVelocity.y + mVelocity.y * 0.01 * dt;
+		
 		mPosition.x = mPosition.x + mVelocity.x * dt;
 		mPosition.y = mPosition.y + mVelocity.y * dt;
 	}

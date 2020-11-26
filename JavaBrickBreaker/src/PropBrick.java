@@ -13,10 +13,9 @@ class Brick extends Prop {
 	final static int normal = 0;
 	final static int multipleBall = 1;
 	final static int fastBall = 2;
-	final static int slowBall = 3;
+	final static int longBar = 3;
 	final static int shortBar = 4;
-	final static int longBar = 5;
-	final static int addLife = 6;
+	final static int addLife = 5;
 	private int mAlpha = 255;
 	boolean mRemovable = false;
 	boolean mAnimationCalled = false;
@@ -24,9 +23,12 @@ class Brick extends Prop {
 	Brick(Vec2f position, int width, int height, Color color) {
 		super(position, color);
 
-		mType = (int) (Math.random() * 24);
+		mType = (int) (Math.random() * 20);
 		if (mType > 6)
 			mType = 0;
+
+		if (mType == 1)
+			mColor = new Color(200, 200, 0);
 
 		mWidth = width;
 		mHeight = height;
@@ -40,11 +42,11 @@ class Brick extends Prop {
 
 				new Thread(() -> {
 					try {
-						for (; mAlpha >= 0; mAlpha -= 2) {
+						for (; mAlpha > 5; mAlpha -= 2) {
 							Thread.sleep(1);
 						}
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
@@ -67,40 +69,36 @@ class Brick extends Prop {
 		g.fillRect((int) mPosition.x + padding, (int) mPosition.y + padding, mWidth - 2 * padding,
 				mHeight - 2 * padding);
 
-		g.setColor(new Color(100, 100, 100, mAlpha));
+		g.setPaint(new GradientPaint((int) mPosition.x, (int) mPosition.y, mColor, (int) mPosition.x,
+				(int) mPosition.y + mHeight, new Color(50, 50, 50, mAlpha)));
 		g.setStroke(new BasicStroke(padding));
 		g.drawRect((int) mPosition.x + padding, (int) mPosition.y + padding, mWidth - padding * 2,
 				mHeight - padding * 2);
 
-		g.setColor(Color.black);
+		g.setColor(new Color(100, 100, 100, mAlpha));
 		g.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
 
 		switch (mType) {
 
 		case Brick.multipleBall:
-			g.drawString("Ball X 3", (int) mPosition.x + 5 * padding, (int) mPosition.y + 5 * padding);
-			break;
-
-		case Brick.slowBall:
-			g.drawString("Speed * 0.8", (int) mPosition.x + 5 * padding, (int) mPosition.y + 5 * padding);
+			g.drawString("Multiple Ball", (int) mPosition.x + 40, (int) mPosition.y + 55);
 			break;
 
 		case Brick.fastBall:
-			g.drawString("Speed * 1.25", (int) mPosition.x + 5 * padding, (int) mPosition.y + 5 * padding);
+			g.drawString("Speed Up", (int) mPosition.x + 50, (int) mPosition.y + 55);
 			break;
 
 		case Brick.shortBar:
-			g.drawString("Bar * 0.8", (int) mPosition.x + 5 * padding, (int) mPosition.y + 5 * padding);
+			g.drawString("Short Bar", (int) mPosition.x + 45, (int) mPosition.y + 55);
 			break;
 
 		case Brick.longBar:
-			g.drawString("Bar * 1.25", (int) mPosition.x + 5 * padding, (int) mPosition.y + 5 * padding);
+			g.drawString("Long Bar", (int) mPosition.x + 50, (int) mPosition.y + 55);
 			break;
 
 		case Brick.addLife:
-			g.drawString("Life ++", (int) mPosition.x + 5 * padding, (int) mPosition.y + 5 * padding);
+			g.drawString("Bonus ++", (int) mPosition.x + 50, (int) mPosition.y + 55);
 			break;
 		}
-
 	}
 }

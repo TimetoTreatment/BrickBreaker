@@ -11,7 +11,7 @@ public class ScreenGameover extends JPanel implements Screen {
 	boolean exit = false;
 
 	ScreenGameover(GameEntity gameEntity) {
-		setBackground(Color.blue);
+		
 
 		addKeyListener(new KeyAdapter() {
 			@Override

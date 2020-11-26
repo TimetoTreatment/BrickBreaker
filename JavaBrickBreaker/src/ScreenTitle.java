@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -22,6 +23,10 @@ public class ScreenTitle extends JPanel implements Screen {
 	boolean exit;
 	boolean isInitialized;
 	JLabel title;
+	int mLineXStart;
+	int mLineXEnd;
+	int mLineY;
+	int mLineHighlightPos;
 	JLabel subtitle;
 	JLabel prompt;
 
@@ -29,6 +34,10 @@ public class ScreenTitle extends JPanel implements Screen {
 
 		exit = false;
 		isInitialized = false;
+		mLineXStart = 200;
+		mLineXEnd = 1000;
+		mLineY = 280;
+		mLineHighlightPos = 350;
 
 		setSize(Config.width, Config.height);
 		setLayout(new GridLayout(3, 1));
@@ -50,8 +59,7 @@ public class ScreenTitle extends JPanel implements Screen {
 		subtitle.setVerticalAlignment(SwingConstants.TOP);
 		subtitle.setForeground(Color.white);
 		subtitle.setFont(new Font(Font.DIALOG, Font.PLAIN, 30));
-		subtitle.setBorder(
-				new CompoundBorder(new EmptyBorder(0, 200, 220, 200), new MatteBorder(0, 0, 1, 0, Color.white)));
+		subtitle.setBorder(new EmptyBorder(20, 200, 220, 200));
 		add(subtitle);
 
 		prompt = new JLabel("Press Spacebar to Play");
@@ -60,6 +68,8 @@ public class ScreenTitle extends JPanel implements Screen {
 		prompt.setBorder(new CompoundBorder(new EmptyBorder(170, 390, 65, 390), new LineBorder(Color.white, 2)));
 		add(prompt);
 
+		Animation();
+
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -67,38 +77,15 @@ public class ScreenTitle extends JPanel implements Screen {
 					exit = true;
 			}
 		});
-		
-		addMouseListener(new MouseListener() {
 
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
+		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
 				System.out.println("x " + e.getX());
 				System.out.println("y " + e.getY());
+
+				mLineY = e.getY();
 			}
 		});
 	}
@@ -110,7 +97,6 @@ public class ScreenTitle extends JPanel implements Screen {
 
 		isInitialized = true;
 		exit = false;
-		Animation();
 	}
 
 	@Override
@@ -124,29 +110,34 @@ public class ScreenTitle extends JPanel implements Screen {
 		super.paintComponent(_g);
 
 		Graphics2D g = (Graphics2D) _g;
+
+		g.setColor(Color.white);
+		g.drawLine(mLineXStart, mLineY, mLineXEnd, mLineY);
+
+		g.setPaint(new GradientPaint(mLineHighlightPos, mLineY, Color.white,
+				mLineHighlightPos+10, mLineY, Color.black));
+		g.fillOval(mLineHighlightPos, mLineY-5, 10, 10);
 	}
 
 	private void Animation() {
 		new Thread(() -> {
 			try {
-
 				for (;;) {
-
 					if (exit == true)
 						return;
 
 					prompt.setForeground(Color.black);
-					Thread.sleep(249);
-					
+					Thread.sleep(250);
+
 					double random = Math.random();
-					if(random <= 0.33)
+					if (random <= 0.33)
 						prompt.setForeground(Color.red);
-					else if(random <= 0.66)
+					else if (random <= 0.66)
 						prompt.setForeground(Color.green);
 					else
 						prompt.setForeground(Color.cyan);
 
-					Thread.sleep(249);
+					Thread.sleep(250);
 
 				}
 			} catch (InterruptedException e) {
@@ -154,6 +145,35 @@ public class ScreenTitle extends JPanel implements Screen {
 				e.printStackTrace();
 			}
 
+		}).start();
+
+		new Thread(() -> {
+			try {
+				for (;;) {
+					if (exit == true)
+						return;
+
+					int dt;
+
+					for (dt = 4; mLineHighlightPos <= mLineXEnd; mLineHighlightPos += 2) {
+
+						if (mLineHighlightPos >= (mLineXEnd - mLineXStart) * 4 / 5 + mLineXStart)
+							dt = 1;
+
+						Thread.sleep(dt);
+					}
+					for (dt = 4; mLineHighlightPos >= mLineXStart; mLineHighlightPos -= 2) {
+
+						if (mLineHighlightPos <= (mLineXEnd - mLineXStart) * 1 / 5 + mLineXStart)
+							dt = 1;
+
+						Thread.sleep(dt);
+					}
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}).start();
 	}
 
