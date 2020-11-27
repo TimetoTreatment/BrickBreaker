@@ -15,19 +15,20 @@ public class GameEntity {
 	private Vector<Ball> mBalls;
 	private Vector<Brick> mBricks;
 	private Bar mBar;
-	AudioPlayer mAudioBGM = new AudioPlayer("bgm.wav", 1);
-	AudioPlayer mAudioBusted = new AudioPlayer("busted.wav", 1);
-	AudioPlayer mAudioClear = new AudioPlayer("clear.wav", 1);
-	AudioPlayer[] mAudioLaugh = new AudioPlayer[7];
-	AudioPlayer[] mAudioSteamPack = new AudioPlayer[2];
-	AudioPlayer[] mAudioDeath = new AudioPlayer[2];
-	AudioPlayer mAudioLaunch = new AudioPlayer("launch.wav", 10);
-	AudioPlayer mAudioHitBrick = new AudioPlayer("hitBrick.wav", 10);
-	AudioPlayer mAudioHitBar = new AudioPlayer("hitBar.wav", 10);
-	AudioPlayer mAudioItemLongBar = new AudioPlayer("itemLongBar.wav", 5);
-	AudioPlayer mAudioItemShortBar = new AudioPlayer("itemShortBar.wav", 5);
-	AudioPlayer mAudioItemBonusBall = new AudioPlayer("itemBonusBall.wav", 5);
-	AudioPlayer mAudioItemUltimate = new AudioPlayer("itemUltimate.wav", 5);
+	private AudioPlayer mAudioBGM = new AudioPlayer("bgm.wav", 1);
+	private AudioPlayer mAudioBusted = new AudioPlayer("busted.wav", 1);
+	private AudioPlayer mAudioClear = new AudioPlayer("clear.wav", 1);
+	private AudioPlayer mAudioHighScore = new AudioPlayer("highScore.wav", 1);
+	private AudioPlayer[] mAudioLaugh = new AudioPlayer[7];
+	private AudioPlayer[] mAudioSteamPack = new AudioPlayer[2];
+	private AudioPlayer[] mAudioDeath = new AudioPlayer[2];
+	private AudioPlayer mAudioLaunch = new AudioPlayer("launch.wav", 10);
+	private AudioPlayer mAudioHitBrick = new AudioPlayer("hitBrick.wav", 10);
+	private AudioPlayer mAudioHitBar = new AudioPlayer("hitBar.wav", 10);
+	private AudioPlayer mAudioItemLongBar = new AudioPlayer("itemLongBar.wav", 5);
+	private AudioPlayer mAudioItemShortBar = new AudioPlayer("itemShortBar.wav", 5);
+	private AudioPlayer mAudioItemBonusBall = new AudioPlayer("itemBonusBall.wav", 5);
+	private AudioPlayer mAudioItemUltimate = new AudioPlayer("itemUltimate.wav", 5);
 
 	GameEntity() {
 		mAudioBGM.Play();
@@ -50,7 +51,7 @@ public class GameEntity {
 
 	void Initialize() {
 		mCurrentScore = 0;
-		mStage = 1;
+		mStage = Config.defaultStage;
 		mBallQueue = 0;
 		mBonusBall = 5;
 	}
@@ -74,7 +75,7 @@ public class GameEntity {
 
 			if (collisionProp instanceof Ball) {
 				ball.SetEnable(false);
-				mAudioDeath[(int) Math.random() * 2].Play();
+				mAudioDeath[(int) (Math.random() * 2)].Play();
 			}
 
 			else if (collisionProp instanceof Bar) {
@@ -201,8 +202,8 @@ public class GameEntity {
 		mBricks.clear();
 		mBar = null;
 
-		final int maxWidth = 1190;
-		final int maxHeight = 400;
+		final int maxWidth = Config.width - 30;
+		final int maxHeight = Config.height / 2;
 		final int maxCol = mStage + 2;
 		final int maxRow = mStage + 1;
 		int width = maxWidth / maxCol;
@@ -210,8 +211,7 @@ public class GameEntity {
 
 		for (int row = 0; row < maxRow; row++)
 			for (int col = 0; col < maxCol; col++)
-				AddBrick(new Vec2f(5 + col * width * 0.99, 5 + row * height * 0.99), (int) (width * 0.996), height,
-						Color.white);
+				AddBrick(new Vec2f(7 + col * width, 7 + row * height * 0.99), width, height, Color.white);
 
 		AddBar(new Vec2f(390, 750), 400, 20, Color.white);
 		AddBall(new Vec2f(600, 740), new Vec2f(250, -500));
@@ -237,7 +237,8 @@ public class GameEntity {
 	}
 
 	void MoveBar(int direction) {
-		mBar.Move(direction);
+		if (mBar != null)
+			mBar.Move(direction);
 	}
 
 	void AddBrick(Vec2f position, int width, int height, Color color) {
@@ -262,6 +263,10 @@ public class GameEntity {
 		mStage += 2;
 		mBonusBall += 3;
 		return true;
+	}
+
+	void PlayHighScore() {
+		mAudioHighScore.Play();
 	}
 
 	int GetHighScore() {

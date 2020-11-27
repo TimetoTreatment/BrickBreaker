@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-public class ScreenGameover extends JPanel implements Screen {
+public class ScreenGameOver extends JPanel implements Screen {
 
 	private GameEntity mGameEntity;
 	private JLabel mHighScore;
@@ -15,42 +15,40 @@ public class ScreenGameover extends JPanel implements Screen {
 	private JLabel mPrompt;
 	private int mPrevHighScore;
 	private boolean mExit;
-	private boolean mAnimation;
+	private Thread mAnimation;
 
-	ScreenGameover(GameEntity gameEntity) {
+	ScreenGameOver(GameEntity gameEntity) {
 
 		mGameEntity = gameEntity;
 		mPrevHighScore = 0;
 		mExit = false;
-		mAnimation = false;
+		mAnimation = null;
 
 		setLayout(null);
 		setBackground(Color.black);
 		setFocusable(true);
 
 		mScore = new JLabel();
-		mScore.setBounds(100, 100, 1000, 100);
+		mScore.setBounds(100, 180, 1000, 100);
 		mScore.setHorizontalAlignment(SwingConstants.CENTER);
-		mScore.setForeground(Color.white);
+		mScore.setForeground(Color.black);
 		mScore.setFont(new Font(Font.DIALOG, Font.PLAIN, 60));
 		add(mScore);
 
 		mHighScore = new JLabel();
-		mHighScore.setBounds(100, 200, 1000, 100);
+		mHighScore.setBounds(100, 300, 1000, 100);
 		mHighScore.setHorizontalAlignment(SwingConstants.CENTER);
-		mHighScore.setForeground(Color.white);
+		mHighScore.setForeground(Color.black);
 		mHighScore.setFont(new Font(Font.DIALOG, Font.PLAIN, 60));
 		add(mHighScore);
 
-		mPrompt = new JLabel("Press Spacebar to Play");
-		mPrompt.setBounds(0, 600, 1200, 100);
+		mPrompt = new JLabel("Press SPACEBAR to Restart");
+		mPrompt.setBounds(0, 640, 1200, 100);
 		mPrompt.setHorizontalAlignment(SwingConstants.CENTER);
 		mPrompt.setForeground(Color.black);
 		mPrompt.setFont(new Font(Font.DIALOG, Font.PLAIN, 48));
 		add(mPrompt);
 
-		Animation();
-		
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -63,32 +61,45 @@ public class ScreenGameover extends JPanel implements Screen {
 
 	@Override
 	public void Update() {
-
-		if (mPrevHighScore < mGameEntity.GetCurrentScore())
-			mScore.setForeground(Color.green);
-		else
-			mScore.setForeground(Color.white);
-
-		mHighScore.setText("HighScore : " + Integer.toString(mGameEntity.GetHighScore()));
-		mScore.setText("Score : " + Integer.toString(mGameEntity.GetCurrentScore()));
-
 		requestFocus();
 	}
 
-	private void Animation() {
-		if (mAnimation)
-			return;
+	@Override
+	public void Initialize() {
+		mScore.setForeground(Color.black);
+		mHighScore.setForeground(Color.black);
+		mHighScore.setFont(new Font(Font.DIALOG, Font.PLAIN, 60));
+		mPrompt.setForeground(Color.black);
 
-		mAnimation = true;
-		new Thread(() -> {
+		mAnimation = new Thread(() -> {
 			try {
+				mScore.setText("Score : " + Integer.toString(mGameEntity.GetCurrentScore()));
+				mHighScore.setText("HighScore : " + Integer.toString(mPrevHighScore));
+				mScore.setForeground(Color.white);
+				Thread.sleep(1000);
 
-				Thread.sleep(4000);
+				mHighScore.setForeground(Color.white);
+				Thread.sleep(1000);
+
+				if (mPrevHighScore < mGameEntity.GetCurrentScore()) {
+					for (int score = mPrevHighScore; score <= mGameEntity.GetCurrentScore();) {
+						mHighScore.setText("HighScore : " + Integer.toString(score));
+						Thread.sleep(1);
+
+						if (mGameEntity.GetCurrentScore() < 10000)
+							score += 10;
+						else
+							score += 100;
+					}
+
+					Thread.sleep(1000);
+					mGameEntity.PlayHighScore();
+
+					mHighScore.setFont(new Font(Font.DIALOG, Font.BOLD, 88));
+					mHighScore.setForeground(new Color(0, 200, 0));
+				}
 
 				for (;;) {
-					if (mExit == true)
-						return;
-
 					for (int i = 0; i < 256; i++) {
 						mPrompt.setForeground(new Color(i, i, i));
 						Thread.sleep(1);
@@ -100,25 +111,20 @@ public class ScreenGameover extends JPanel implements Screen {
 					}
 				}
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return;
 			}
+		});
 
-		}).start();
-	}
-
-	@Override
-	public void Initialize() {
-		// TODO Auto-generated method stub
-		mAnimation = false;
+		mAnimation.start();
 	}
 
 	@Override
 	public boolean IsFinished() {
-
 		if (mExit) {
 			mExit = false;
 			mPrevHighScore = mGameEntity.GetHighScore();
+			mAnimation.interrupt();
+			mAnimation = null;
 			return true;
 		}
 

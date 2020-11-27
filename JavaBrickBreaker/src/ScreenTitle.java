@@ -14,8 +14,8 @@ import javax.swing.border.EmptyBorder;
 
 public class ScreenTitle extends JPanel implements Screen {
 
+	private GameEntity mGameEntity;
 	private boolean mExit;
-	private boolean mIsInitialized;
 	private int mLineXStart;
 	private int mLineXEnd;
 	private int mLineY;
@@ -24,14 +24,14 @@ public class ScreenTitle extends JPanel implements Screen {
 	private JLabel mSubtitle;
 	private JLabel mPrompt;
 
-	ScreenTitle() {
+	ScreenTitle(GameEntity gameEntity) {
 
+		mGameEntity = gameEntity;
 		mExit = false;
-		mIsInitialized = false;
-		mLineXStart = 200;
-		mLineXEnd = 1000;
+		mLineXStart = 198;
+		mLineXEnd = 1002;
 		mLineY = 280;
-		mLineHighlightPos = 350;
+		mLineHighlightPos = 375;
 
 		setSize(Config.width, Config.height);
 		setLayout(new GridLayout(3, 1));
@@ -75,11 +75,8 @@ public class ScreenTitle extends JPanel implements Screen {
 
 	@Override
 	public void Initialize() {
-		if (mIsInitialized)
-			return;
-
-		mIsInitialized = true;
 		mExit = false;
+		mGameEntity.Initialize();
 	}
 
 	@Override
@@ -114,7 +111,7 @@ public class ScreenTitle extends JPanel implements Screen {
 	private void Animation() {
 		new Thread(() -> {
 			try {
-				Thread.sleep(4000);
+				Thread.sleep(3000);
 
 				for (; !mExit;) {
 					for (int i = 0; i < 256; i++) {
