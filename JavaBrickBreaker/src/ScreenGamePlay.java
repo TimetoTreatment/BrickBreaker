@@ -132,6 +132,9 @@ public class ScreenGamePlay extends JPanel implements Screen {
 	public void Initialize() {
 		mBarDirection = Bar.stop;
 		mUseBallKey = false;
+		mKeyLock = false;
+		mWestKey = false;
+		mEastKey = false;
 
 		mGameEntity.NewStage();
 		mHelp.setVisible(false);
@@ -154,9 +157,9 @@ public class ScreenGamePlay extends JPanel implements Screen {
 
 	@Override
 	public void Update() {
+		mGameEntity.Update(this, Config.frameTime);
 		MoveBar();
 		UseBall();
-		mGameEntity.Update(this, Config.frameTime);
 
 		requestFocus();
 		repaint();
@@ -221,16 +224,16 @@ public class ScreenGamePlay extends JPanel implements Screen {
 					mBarDirection = Bar.west;
 				if (mEastKey)
 					mBarDirection = Bar.east;
-			} else if (mWestKey && mBarDirection == Bar.east)
+			} else if (mBarDirection == Bar.east && mWestKey)
 				mBarDirection = Bar.west;
-			else if (mEastKey && mBarDirection == Bar.west)
+			else if (mBarDirection == Bar.west && mEastKey)
 				mBarDirection = Bar.east;
 		}
 
-		if (!mWestKey || !mEastKey)
-			mKeyLock = false;
-		else
+		if (mWestKey && mEastKey)
 			mKeyLock = true;
+		else
+			mKeyLock = false;
 
 		mGameEntity.MoveBar(mBarDirection);
 	}

@@ -11,7 +11,6 @@ class ScreenManager extends JPanel {
 	private Screen currentScreen;
 
 	ScreenManager(GameEntity gameEntity) {
-
 		mGameEntity = gameEntity;
 		mScreens = new CardLayout();
 		screenTitle = new ScreenTitle(mGameEntity);
@@ -29,6 +28,8 @@ class ScreenManager extends JPanel {
 
 	void MainLoop() {
 		new Thread(() -> {
+			mGameEntity.PlayBGM();
+
 			for (;;) {
 				try {
 					currentScreen.Initialize();
@@ -53,6 +54,5 @@ class ScreenManager extends JPanel {
 				}
 			}
 		}).start();
-
 	}
 }

@@ -2,7 +2,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class GameEntity {
 
@@ -11,9 +11,9 @@ public class GameEntity {
 	private int mCurrentScore;
 	private int mBonusBall;
 	private int mBallQueue;
-	private Vector<Prop> mProps;
-	private Vector<Ball> mBalls;
-	private Vector<Brick> mBricks;
+	private ArrayList<Prop> mProps;
+	private ArrayList<Ball> mBalls;
+	private ArrayList<Brick> mBricks;
 	private Bar mBar;
 	private AudioPlayer mAudioBGM = new AudioPlayer("bgm.wav", 1);
 	private AudioPlayer mAudioBusted = new AudioPlayer("busted.wav", 1);
@@ -31,12 +31,9 @@ public class GameEntity {
 	private AudioPlayer mAudioItemUltimate = new AudioPlayer("itemUltimate.wav", 5);
 
 	GameEntity() {
-		mAudioBGM.Play();
-		mAudioBGM.SetLoop(true);
-
-		mProps = new Vector<>();
-		mBalls = new Vector<>();
-		mBricks = new Vector<>();
+		mProps = new ArrayList<>();
+		mBalls = new ArrayList<>();
+		mBricks = new ArrayList<>();
 		mBar = null;
 		mHighScore = 0;
 
@@ -61,14 +58,6 @@ public class GameEntity {
 		boolean multipleBallEnable = false;
 		boolean fastBallEnable = false;
 
-		for (; mBallQueue > 0; mBallQueue--) {
-			Ball newBall = new Ball(new Vec2f(mBar.GetPosition().x + mBar.GetWidth() / 2, mBar.GetPosition().y - 10),
-					new Vec2f(mBar.GetVelocity().x / 2 + 600 * Math.random() - 350, -600 * Math.random() - 300));
-
-			mProps.add(newBall);
-			mBalls.add(newBall);
-		}
-
 		for (Ball ball : mBalls) {
 			ball.Update(dt);
 			Prop collisionProp = ball.Collision(container, mProps);
@@ -89,7 +78,7 @@ public class GameEntity {
 				else if (ball.GetPosition().x >= mBar.GetPosition().x + mBar.GetWidth() * 3 / 5)
 					ball.GetVelocity().x += Math.abs(Ball.defaultVelocity.x * 0.5);
 
-				ball.GetVelocity().x += mBar.GetVelocity().x / 20;
+				ball.GetVelocity().x += mBar.GetVelocity().x / 10;
 				ball.GetVelocity().y = -ball.GetVelocity().y;
 				ball.GetPosition().y -= ball.GetRadious();
 
@@ -142,10 +131,18 @@ public class GameEntity {
 			}
 		}
 
+		for (; mBallQueue > 0; mBallQueue--) {
+			AddBall(new Vec2f(mBar.GetPosition().x + mBar.GetWidth() / 2, mBar.GetPosition().y - 10),
+					new Vec2f(
+							mBar.GetVelocity().x / 2 + Ball.defaultVelocity.x * Math.random()
+									- Ball.defaultVelocity.x / 2,
+							- Ball.defaultVelocity.y * Math.random() - Ball.defaultVelocity.y));
+		}
+
 		if (fastBallEnable) {
-			for (var b : mBalls) {
-				b.GetVelocity().x *= 1.25;
-				b.GetVelocity().y *= 1.25;
+			for (Ball b : mBalls) {
+				b.GetVelocity().x *= 1.15;
+				b.GetVelocity().y *= 1.15;
 			}
 		}
 
@@ -214,7 +211,7 @@ public class GameEntity {
 				AddBrick(new Vec2f(7 + col * width, 7 + row * height * 0.99), width, height, Color.white);
 
 		AddBar(new Vec2f(390, 750), 400, 20, Color.white);
-		AddBall(new Vec2f(600, 740), new Vec2f(250, -500));
+		AddBall(new Vec2f(600, 740), new Vec2f(Ball.defaultVelocity.x, Ball.defaultVelocity.y));
 	}
 
 	void AddBall(Vec2f position, Vec2f velocity) {
@@ -263,6 +260,10 @@ public class GameEntity {
 		mStage += 2;
 		mBonusBall += 3;
 		return true;
+	}
+	
+	void PlayBGM() {
+		mAudioBGM.SetLoop(true);
 	}
 
 	void PlayHighScore() {

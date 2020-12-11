@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 class Bar extends Prop {
 
 	private Vec2f mVelocity;
+	private int mMinimumWidth = 25;
+	private int mMaximumWidth = Config.width - 16;
 	private int mWidth;
 	private int mHeight;
 	private int mDirection;
@@ -22,6 +24,12 @@ class Bar extends Prop {
 	@Override
 	void Update(double dt) {
 
+		if (mWidth < mMinimumWidth)
+			mWidth = mMinimumWidth;
+		
+		if (mWidth > mMaximumWidth)
+			mWidth = mMaximumWidth;
+
 		if (mDirection == west)
 			mVelocity.x = -1000;
 		else if (mDirection == east)
@@ -35,7 +43,6 @@ class Bar extends Prop {
 
 	@Override
 	void Draw(Graphics2D g) {
-
 		g.setColor(Color.darkGray);
 		g.fillRect((int) mPosition.x, (int) mPosition.y, mWidth, mHeight * 1 / 3);
 
@@ -54,14 +61,9 @@ class Bar extends Prop {
 
 		if (mPosition.x < 0) {
 			mPosition.x = 0;
-			mVelocity.x = 0;
 		} else if (mPosition.x > container.getWidth() - mWidth) {
 			mPosition.x = container.getWidth() - mWidth;
-			mVelocity.x = 0;
 		}
-
-		if (mWidth > container.getWidth())
-			mWidth = container.getWidth();
 	}
 
 	Vec2f GetVelocity() {

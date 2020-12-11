@@ -9,17 +9,17 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 class AudioPlayer {
 
-	private Clip[] mClips;
 	private int mChannel;
-	private int mIndex;
+	private int mMaxChannel;
+	private Clip[] mClips;
 
 	AudioPlayer(String fileName, int channel) {
-		mChannel = channel;
-		mClips = new Clip[mChannel];
-		mIndex = 0;
+		mChannel = 0;
+		mMaxChannel = channel;
+		mClips = new Clip[mMaxChannel];
 
 		try {
-			for (int i = 0; i < mChannel; i++) {
+			for (int i = 0; i < mMaxChannel; i++) {
 				mClips[i] = AudioSystem.getClip();
 				URL url = getClass().getClassLoader().getResource(fileName);
 
@@ -34,13 +34,13 @@ class AudioPlayer {
 	}
 
 	void Play() {
-		if (mIndex == mChannel)
-			mIndex = 0;
+		if (mChannel == mMaxChannel)
+			mChannel = 0;
 
-		mClips[mIndex].setFramePosition(0);
-		mClips[mIndex].start();
+		mClips[mChannel].setFramePosition(0);
+		mClips[mChannel].start();
 
-		mIndex++;
+		mChannel++;
 	}
 
 	void SetLoop(boolean b) {
@@ -51,6 +51,6 @@ class AudioPlayer {
 	}
 
 	void Stop() {
-		mClips[mIndex].stop();
+		mClips[mChannel].stop();
 	}
 }

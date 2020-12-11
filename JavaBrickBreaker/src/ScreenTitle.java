@@ -15,23 +15,23 @@ import javax.swing.border.EmptyBorder;
 public class ScreenTitle extends JPanel implements Screen {
 
 	private GameEntity mGameEntity;
-	private boolean mExit;
-	private int mLineXStart;
-	private int mLineXEnd;
-	private int mLineY;
-	private int mLineHighlightPos;
 	private JLabel mTitle;
 	private JLabel mSubtitle;
 	private JLabel mPrompt;
+	private boolean mExit;
+	final private int mLineXStart;
+	final private int mLineXEnd;
+	final private int mLineY;
+	private int mLineHighlightPos;
 
 	ScreenTitle(GameEntity gameEntity) {
 
 		mGameEntity = gameEntity;
 		mExit = false;
-		mLineXStart = 198;
-		mLineXEnd = 1002;
+		mLineXStart = 199;
+		mLineXEnd = 1001;
 		mLineY = 280;
-		mLineHighlightPos = 375;
+		mLineHighlightPos = 351;
 
 		setSize(Config.width, Config.height);
 		setLayout(new GridLayout(3, 1));
@@ -95,7 +95,7 @@ public class ScreenTitle extends JPanel implements Screen {
 		g.drawLine(mLineXStart, mLineY, mLineHighlightPos + 1, mLineY);
 
 		g.setPaint(new GradientPaint(mLineHighlightPos, mLineY, Color.white, mLineXEnd, mLineY, Color.black));
-		g.drawLine(mLineHighlightPos - 1, mLineY, mLineXEnd, mLineY);
+		g.drawLine(mLineHighlightPos, mLineY, mLineXEnd, mLineY);
 	}
 
 	@Override
@@ -148,7 +148,6 @@ public class ScreenTitle extends JPanel implements Screen {
 					}
 				}
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}).start();

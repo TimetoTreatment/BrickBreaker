@@ -14,15 +14,16 @@ public class ScreenGameOver extends JPanel implements Screen {
 	private JLabel mScore;
 	private JLabel mPrompt;
 	private int mPrevHighScore;
-	private boolean mExit;
 	private Thread mAnimation;
+	private boolean mAnimationEnd;
+	private boolean mExit;
 
 	ScreenGameOver(GameEntity gameEntity) {
-
 		mGameEntity = gameEntity;
 		mPrevHighScore = 0;
 		mExit = false;
 		mAnimation = null;
+		mAnimationEnd = false;
 
 		setLayout(null);
 		setBackground(Color.black);
@@ -66,6 +67,8 @@ public class ScreenGameOver extends JPanel implements Screen {
 
 	@Override
 	public void Initialize() {
+		mExit = false;
+		mAnimationEnd = false;
 		mScore.setForeground(Color.black);
 		mHighScore.setForeground(Color.black);
 		mHighScore.setFont(new Font(Font.DIALOG, Font.PLAIN, 60));
@@ -97,7 +100,11 @@ public class ScreenGameOver extends JPanel implements Screen {
 
 					mHighScore.setFont(new Font(Font.DIALOG, Font.BOLD, 88));
 					mHighScore.setForeground(new Color(0, 200, 0));
+					
+					Thread.sleep(500);
 				}
+
+				mAnimationEnd = true;
 
 				for (;;) {
 					for (int i = 0; i < 256; i++) {
@@ -120,11 +127,9 @@ public class ScreenGameOver extends JPanel implements Screen {
 
 	@Override
 	public boolean IsFinished() {
-		if (mExit) {
-			mExit = false;
+		if (mExit && mAnimationEnd) {
 			mPrevHighScore = mGameEntity.GetHighScore();
 			mAnimation.interrupt();
-			mAnimation = null;
 			return true;
 		}
 

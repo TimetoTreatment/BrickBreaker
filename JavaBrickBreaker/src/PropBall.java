@@ -2,7 +2,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
-import java.util.Vector;
+import java.util.ArrayList;
 
 class Ball extends Prop {
 
@@ -20,6 +20,10 @@ class Ball extends Prop {
 	void Update(double dt) {
 		mVelocity.x = mVelocity.x + mVelocity.x * 0.01 * dt;
 		mVelocity.y = mVelocity.y + mVelocity.y * 0.01 * dt;
+		
+		mPositionPrev.x = mPosition.x;
+		mPositionPrev.y = mPosition.y;
+
 		mPosition.x = mPosition.x + mVelocity.x * dt;
 		mPosition.y = mPosition.y + mVelocity.y * dt;
 	}
@@ -32,9 +36,15 @@ class Ball extends Prop {
 		g.fillOval((int) (mPosition.x), (int) (mPosition.y), (int) mRadious * 2, (int) mRadious * 2);
 	}
 
-	Prop Collision(Container container, Vector<Prop> props) {
+	Prop Collision(Container container, ArrayList<Prop> props) {
 		if (container.getHeight() <= 100)
 			return null;
+
+		if (mPosition.x < -100 || mPosition.x > Config.width + 100)
+			return this;
+
+		if (mPosition.y < -100)
+			return this;
 
 		if (mPosition.x < 0) {
 			mPosition.x = 0;
@@ -54,7 +64,7 @@ class Ball extends Prop {
 			return this;
 		}
 
-		for (var prop : props) {
+		for (Prop prop : props) {
 			if (prop instanceof Bar) {
 
 				Bar bar = (Bar) prop;
@@ -68,17 +78,19 @@ class Ball extends Prop {
 				Brick brick = (Brick) prop;
 
 				if (brick.IsEnable()) {
-					if (mPosition.x >= brick.GetPosition().x - mRadious * 2
+					if (mPosition.x + mRadious * 2 >= brick.GetPosition().x
 							&& mPosition.x <= brick.GetPosition().x + brick.GetWidth()
-							&& mPosition.y >= brick.GetPosition().y - mRadious * 2
+							&& mPosition.y + mRadious * 2 >= brick.GetPosition().y
 							&& mPosition.y <= brick.GetPosition().y + brick.GetHeight()) {
-						if (mPosition.x <= brick.GetPosition().x
-								|| mPosition.x >= brick.GetPosition().x + brick.GetWidth() - mRadious)
+
+						if (mPositionPrev.x + mRadious * 2 <= brick.GetPosition().x
+								|| mPositionPrev.x >= brick.GetPosition().x + brick.GetWidth())
 							mVelocity.x = -mVelocity.x;
 						else
 							mVelocity.y = -mVelocity.y;
 
 						return brick;
+
 					}
 				}
 			}
