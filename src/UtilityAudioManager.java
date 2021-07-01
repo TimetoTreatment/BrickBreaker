@@ -10,8 +10,8 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 class AudioPlayer {
 
 	private int mChannel;
-	private int mMaxChannel;
-	private Clip[] mClips;
+	private final int mMaxChannel;
+	private final Clip[] mClips;
 
 	AudioPlayer(String fileName, int channel) {
 		mChannel = 0;

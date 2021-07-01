@@ -91,38 +91,19 @@ public class ScreenGamePlay extends JPanel implements Screen {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				switch (e.getKeyCode()) {
-				case KeyEvent.VK_LEFT:
-					mWestKey = false;
-					break;
-
-				case KeyEvent.VK_RIGHT:
-					mEastKey = false;
-					break;
-
-				case KeyEvent.VK_H:
-					mHelp.setVisible(false);
-					break;
+					case KeyEvent.VK_LEFT -> mWestKey = false;
+					case KeyEvent.VK_RIGHT -> mEastKey = false;
+					case KeyEvent.VK_H -> mHelp.setVisible(false);
 				}
 			}
 
 			@Override
 			public void keyPressed(KeyEvent e) {
 				switch (e.getKeyCode()) {
-				case KeyEvent.VK_LEFT:
-					mWestKey = true;
-					break;
-
-				case KeyEvent.VK_RIGHT:
-					mEastKey = true;
-					break;
-
-				case KeyEvent.VK_SPACE:
-					mUseBallKey = true;
-					break;
-
-				case KeyEvent.VK_H:
-					mHelp.setVisible(true);
-					break;
+					case KeyEvent.VK_LEFT -> mWestKey = true;
+					case KeyEvent.VK_RIGHT -> mEastKey = true;
+					case KeyEvent.VK_SPACE -> mUseBallKey = true;
+					case KeyEvent.VK_H -> mHelp.setVisible(true);
 				}
 			}
 		});
@@ -157,6 +138,11 @@ public class ScreenGamePlay extends JPanel implements Screen {
 
 	@Override
 	public void Update() {
+		repaint();
+	}
+
+	@Override
+	public void paintComponent(Graphics g) {
 		mGameEntity.Update(this, Config.frameTime);
 		MoveBar();
 		UseBall();
@@ -172,10 +158,7 @@ public class ScreenGamePlay extends JPanel implements Screen {
 		if (mGameEntity.IsGameOver()) {
 			mExit = true;
 		}
-	}
 
-	@Override
-	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		mGameEntity.Draw((Graphics2D) g);
 	}

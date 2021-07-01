@@ -1,6 +1,3 @@
-import java.awt.CardLayout;
-import java.awt.Container;
-
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -10,10 +7,10 @@ public class JavaBrickBreaker extends JFrame {
 	private ScreenManager screenManager;
 
 	JavaBrickBreaker() {
-		
+
 		gameEntity = new GameEntity();
 		screenManager = new ScreenManager(gameEntity);
-		
+
 		setTitle("Brick Breaker");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(Config.width, Config.height);
