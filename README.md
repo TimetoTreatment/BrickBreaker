@@ -5,7 +5,7 @@
 <h3 align="center">벽돌깨기 게임</h3>
 
 <p align="center">
-  XML 문서를 편집하거나 유효성을 검사할 수 있는 프로그램 
+  다양한 기믹을 포함하는 재미있는 벽돌깨기 게임
   <br>
   <a href=""><strong>소개 영상 (업로드 예정) »</strong></a>
   <br>
