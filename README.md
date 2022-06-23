@@ -27,7 +27,7 @@ JAVA 프로그래밍 수업의 프로젝트 결과물입니다. 다양한 기믹
 ## 실행화면
 
 > **시작 화면**  
-> <sub>게임을 타이틀을 출력합니다.</sub>  
+> <sub>게임의 타이틀을 출력합니다.</sub>  
 
 ![image](https://user-images.githubusercontent.com/60598051/175316681-d1cfeb70-a086-4617-bd86-d2337f5905c7.png)
 
