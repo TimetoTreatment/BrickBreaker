@@ -25,23 +25,31 @@ class Brick extends Prop {
 		super(position, color);
 
 		int random = (int) (Math.random() * 100);
+		int chanceOffset = 0;
 
-		if (random < 6) {
+		final int multipleBallChance = 8;
+		final int fastBallChance = 8;
+		final int longBarChance = 8;
+		final int shortBarChance = 4;
+		final int addLifeChance = 8;
+		final int ultimateChance = 2;
+
+		if (random < (chanceOffset = chanceOffset + multipleBallChance)) {
 			mType = multipleBall;
 			mColor = new Color(200, 200, 0);
-		} else if (random < 12) {
+		} else if (random < (chanceOffset = chanceOffset + fastBallChance)) {
 			mType = fastBall;
 			mColor = new Color(200, 0, 0);
-		} else if (random < 18) {
+		} else if (random < (chanceOffset = chanceOffset + longBarChance)) {
 			mType = longBar;
 			mColor = new Color(0, 200, 0);
-		} else if (random < 24) {
+		} else if (random < (chanceOffset = chanceOffset + shortBarChance)) {
 			mType = shortBar;
 			mColor = new Color(0, 0, 200);
-		} else if (random < 30) {
+		} else if (random < (chanceOffset = chanceOffset + addLifeChance)) {
 			mType = addLife;
 			mColor = new Color(200, 100, 0);
-		} else if (random < 31) {
+		} else if (random < chanceOffset + ultimateChance) {
 			mType = ultimate;
 			mColor = new Color(100, 100, 100);
 		} else {
